@@ -71,7 +71,7 @@ body{display:flex;flex-direction:column}
 .ng{display:grid;grid-template-columns:auto repeat(10,var(--cs));margin:8px auto;width:max-content;max-width:100%}
 .nc{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;font:700 11px/1.15 Nunito,sans-serif;padding-bottom:3px;color:var(--ink)}
 .nr{display:flex;justify-content:flex-end;align-items:center;gap:4px;padding-right:5px;font:700 12px Nunito,sans-serif;color:var(--ink)}
-.gc{width:var(--cs);height:var(--cs);border:1px solid #b79a63;background:#fff;display:grid;place-items:center;font-size:calc(var(--cs)*.6);cursor:pointer;user-select:none;touch-action:manipulation}
+.gc{width:var(--cs);height:var(--cs);border:1px solid #b79a63;background:#fff;display:grid;place-items:center;font-size:calc(var(--cs)*.6);cursor:pointer;user-select:none;touch-action:none}
 .gc.m::after{content:"✕";color:#9a8a6a}.gc.f{background:#3b3226}.gc.f.ok{background:var(--ok)}.gc.f.bad{background:#c0392b}.gc.f.win{background:#e8962e}
 .gc.r5{border-right:2px solid var(--ink)}.gc.b5{border-bottom:2px solid var(--ink)}
 .mb{padding:8px 12px;border:2px solid #8a6f3e;border-radius:10px;background:#fff;font:800 14px Nunito,sans-serif;margin:4px;cursor:pointer;color:var(--ink)}.mb.on{background:#ffe08a}
@@ -91,6 +91,7 @@ body{display:flex;flex-direction:column}
 .chr{height:150px;display:block;margin:0 auto 6px}.pair .chr{height:130px;margin:0}
 .gh img{height:44px;vertical-align:middle;margin-right:6px}
 .ng.big .nc{font-size:17px}.ng.big .nr{font-size:19px;gap:7px}
+.ng{touch-action:none;user-select:none}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
@@ -269,7 +270,21 @@ function nonogram(el,done){
  el.innerHTML=`<div class="cw" style="--cs:min(${N>5?26:46}px,calc((100vw - ${N>5?120:130}px)/${N}))"><p style="font-size:15px;text-align:center"><b>Рівень 1.</b> Числа показують, скільки клітинок підряд треба зафарбувати в рядку чи стовпчику. Зафарбуй їх — і з’явиться малюнок.</p><div style="text-align:center"><button class="mb on" id="m1">■ Зафарбувати</button><button class="mb" id="m2">✕ Порожня</button><button class="mb" id="hn">💡 Підказка (3)</button></div><div class="ng${N>5?"":" big"}" style="grid-template-columns:auto repeat(${N},var(--cs))">${g}</div><div class="cmsg"></div><div style="text-align:center"><button class="btn" id="ck">Перевірити</button></div></div>`;
  const cs=[...el.querySelectorAll(".gc")],msg=el.querySelector(".cmsg"),ck=$("ck");
  const paint=c=>{const v=st[+c.dataset.r][+c.dataset.c];c.classList.remove("ok","bad");c.classList.toggle("f",v===1);c.classList.toggle("m",v===2)};
- cs.forEach(c=>c.onclick=()=>{if(lock)return;const r=+c.dataset.r,j=+c.dataset.c;st[r][j]=st[r][j]===mode?0:mode;paint(c)});
+ const grid=el.querySelector(".ng");let drag=null;
+ const cellAt=(x,y)=>{const e=document.elementFromPoint(x,y);return e&&e.classList.contains("gc")?e:null};
+ const setC=(c,v)=>{const r=+c.dataset.r,j=+c.dataset.c;if(st[r][j]!==v){st[r][j]=v;paint(c)}};
+ grid.onpointerdown=e=>{if(lock)return;const c=cellAt(e.clientX,e.clientY);if(!c)return;e.preventDefault();
+  const r0=+c.dataset.r,c0=+c.dataset.c,b=c.getBoundingClientRect();
+  drag={v:st[r0][c0]===mode?0:mode,r0,c0,cx:b.left+b.width/2,cy:b.top+b.height/2,size:b.width,axis:null,last:0};
+  setC(c,drag.v);try{grid.setPointerCapture(e.pointerId)}catch(_){}};
+ grid.onpointermove=e=>{if(!drag)return;
+  if(!drag.axis){const dx=Math.abs(e.clientX-drag.cx),dy=Math.abs(e.clientY-drag.cy);if(Math.max(dx,dy)<drag.size*.6)return;
+   drag.axis=dx>=dy?"r":"c";drag.last=drag.axis==="r"?drag.c0:drag.r0}
+  const t=drag.axis==="r"?cellAt(e.clientX,drag.cy):cellAt(drag.cx,e.clientY);if(!t)return;
+  const k=drag.axis==="r"?+t.dataset.c:+t.dataset.r;
+  for(let i=Math.min(k,drag.last);i<=Math.max(k,drag.last);i++)setC(drag.axis==="r"?cs[drag.r0*N+i]:cs[i*N+drag.c0],drag.v);
+  drag.last=k};
+ grid.onpointerup=grid.onpointercancel=()=>{drag=null};
  [1,2].forEach(m=>$("m"+m).onclick=()=>{mode=m;$("m1").classList.toggle("on",m===1);$("m2").classList.toggle("on",m===2)});
 $("hn").onclick=()=>{if(lock||!hints)return;
   const s=steps.find(s=>s.cells.some(([r,c,v])=>v===1?st[r][c]!==1:st[r][c]===1));
