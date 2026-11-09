@@ -51,7 +51,7 @@ button{font-family:inherit}
 .seg.done{stroke:var(--gold);stroke-dasharray:none;stroke-width:5}
 .pt{position:absolute;z-index:2;transform:translate(-50%,-22px);display:flex;flex-direction:column;align-items:center;padding:0;border:0;background:none;cursor:pointer}
 .pt i{position:relative;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;font:900 18px var(--body);font-style:normal;color:var(--walnut-d);background:radial-gradient(circle at 35% 30%,#fffaf0,#e3cd9c);border:3px solid var(--walnut);box-shadow:0 3px 0 var(--walnut-d),0 7px 12px rgba(0,0,0,.4)}
-.pt i svg{width:22px;height:22px}
+.pt i svg{display:block;width:24px;height:24px;margin:auto;grid-area:1/1}
 .pt.side{flex-direction:row;transform:translate(-22px,-50%)}
 .pt.side b{margin:0 0 0 7px}
 .pt b{margin-top:7px;padding:2px 11px 4px;border-radius:7px;background:var(--parch);color:var(--walnut-d);border:1.5px solid var(--walnut);font:400 16px/1.1 var(--disp);white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.35)}
@@ -202,7 +202,8 @@ body.modal .next,body.walking .next{opacity:0;pointer-events:none;transform:tran
 .kid.ok{border-color:var(--pine);background:var(--okbg)}.kid.bad{border-color:var(--holly);background:var(--badbg)}
 .gifts{display:flex;gap:6px}
 .gb{flex:1;min-width:0;padding:6px 2px 8px;border:2px solid var(--line);border-radius:12px;background:var(--parch);font:800 12.5px var(--body);color:var(--ink);cursor:pointer}
-.gb i{display:block;font-style:normal;font-size:27px;line-height:1.25}
+.gb i{display:block;font-style:normal}
+.gb i svg{display:block;width:36px;height:36px;margin:0 auto 3px}
 .gb.sel{background:var(--gold-l);border-color:#c98a1c;box-shadow:inset 0 0 0 2px #c98a1c}
 .gb:disabled{cursor:default}
 
@@ -266,6 +267,62 @@ body.modal .next,body.walking .next{opacity:0;pointer-events:none;transform:tran
 .word span{width:44px;height:54px;border-radius:9px;display:grid;place-items:center;border:2px solid #a9c6e0;background:#e3eff9;color:#9ab3c9;font:400 28px/1 var(--disp)}
 .word span.on{background:#fff;color:var(--holly);border-color:var(--holly);animation:pop .5s}
 
+/* ---------- розкладка завдань: телефон (стовпчиком) ---------- */
+.pz{display:flex;flex-direction:column}
+.pz .side{display:contents}
+.pz .ins{order:1}.pz .tools,.pz .key,.pz .notes,.pz .qhead{order:2}.pz .board{order:3}.pz .lockbox,.pz .word{order:4}.pz .msg{order:5}.pz .acts{order:6}
+.board .sd+.kp{margin-top:16px}
+
+/* ---------- комп’ютер: горизонтальна розкладка ---------- */
+@media (min-width:1000px) and (min-height:560px) and (hover:hover) and (pointer:fine){
+ .card{max-height:94vh}
+ .card.wide{width:min(1120px,94vw);padding:22px 32px 28px}
+ .th{margin-bottom:18px}
+ .pz{display:grid;grid-template-columns:minmax(300px,360px) 1fr;gap:32px;align-items:start}
+ .pz .side{display:flex;flex-direction:column;position:sticky;top:0}
+ .pz .side>*{order:0}
+ .pz .side .msg{text-align:left;margin-top:14px}
+ .pz .side .acts{justify-content:flex-start;margin-top:16px}
+ .pz .side .tools{justify-content:flex-start;flex-direction:column;align-items:flex-start}
+ .pz .side .lockbox{justify-content:flex-start;margin-top:4px}
+ .pz .side .word{justify-content:flex-start;margin-top:0}
+ .pz .side .notes{margin-bottom:0}
+ .pz .side .qq{font-size:22px}
+ .probs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+ .probs .prob{margin:0;flex-wrap:wrap;align-content:flex-start}
+ .probs .prob p{flex:1 1 calc(100% - 44px)}
+ .probs .prob .dg{margin-left:40px}
+ .board .kid{margin-bottom:12px}
+ .board .gb{padding:9px 4px 10px;font-size:14px}.board .gb i svg{width:44px;height:44px}
+ .board .opt{padding:14px 16px;font-size:18px}
+ .ng{--cs:min(70px,calc((100cqw - 470px)/5))}
+ .sd{--sc:min(82px,calc((100cqw - 440px)/4))}
+ .board{display:flex;flex-direction:column;align-items:center}
+ .board.probs,.board.ex{display:grid}
+ .board:has(.kid),.board:has(.opt){align-items:stretch}
+ .ex{grid-template-columns:repeat(2,1fr);gap:12px}
+ .ex label{padding:12px 12px 12px 16px;font-size:21px}
+ .ex .dg{width:76px;height:54px;font-size:24px}
+ /* кросворд: підказка ліворуч, клітинки праворуч */
+ .cw-grid{--s:36px;gap:8px}
+ .cw-grid>div{display:grid;grid-template-columns:1fr calc((var(--s) + 2px) * var(--cols));align-items:center;gap:20px;padding:4px 10px;border-radius:12px}
+ .cw-grid>div:nth-child(odd){background:rgba(242,227,195,.5)}
+ .cw-grid .clue{margin:0;font-size:16px;align-items:center}
+ .cells input{font-size:19px}
+ /* діалоги: сцена ліворуч, розмова праворуч */
+ .card.dlg{width:min(1000px,94vw);display:grid;grid-template-columns:42% 1fr;grid-template-rows:repeat(11,auto) 1fr;column-gap:32px;padding:24px 28px 26px}
+ .card.dlg>.stage{grid-column:1;grid-row:1/-1;height:auto;min-height:430px;margin:0;padding:0 5%}
+ .card.dlg>:not(.stage):not(.x){grid-column:2}
+ .card.dlg .stage .st-ch{height:250px}.card.dlg .stage .st-mk{height:178px}.card.dlg .stage .solo{height:270px}
+ .card.dlg .stage::after{bottom:-50px;height:110px}
+ .card.dlg .gf{width:60px}.card.dlg .gf.g2{width:52px}.card.dlg .gf.g3{width:44px;top:58%}
+ .card.dlg .who{margin:8px 52px 16px 0;text-align:left}
+ .card.dlg .title{margin:12px 52px 10px 0;text-align:left;font-size:34px}
+ .card.dlg .lead,.card.dlg .small{text-align:left}
+ .card.dlg .acts,.card.dlg .wordrow{justify-content:flex-start}
+ .card.dlg .bub{max-width:92%}
+ .card.dlg .reward{justify-content:flex-start}
+}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.snow{display:none}}
 </style>
 </head>
@@ -395,7 +452,7 @@ function genGrapes(){const k=pick([2,3,4]),m=12/k,p=R(1,9-m);
  return{t:`У Марії 12 виноградин — по одній на кожен дзвін. У Мурка їх у ${k} рази менше, а в Олі на ${p} більше, ніж у Мурка. Скільки виноградин у Олі?`,a:m+p}}
 function lockGame(el,done){
  const Q=[genGifts(),genBoxes(),genWalk(),genGrapes()];
- el.innerHTML=`<p class="ins">Відповідь у кожній задачі — <b>одна цифра</b>. Разом вони складуть код до замка скрині.</p>`+Q.map((q,i)=>`<div class="prob"><span class="n">${i+1}</span><p>${q.t}</p><input class="dg" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Відповідь до задачі ${i+1}"></div>`).join("")+`<div class="lockbox" id="lk">${PADLOCK}<div class="wheels">${"<span>·</span>".repeat(4)}</div></div><div class="msg"></div><div class="acts"><button class="btn" id="ck">Відкрити замок</button></div>`;
+ el.innerHTML=`<div class="pz"><div class="side"><p class="ins">Відповідь у кожній задачі — <b>одна цифра</b>. Разом вони складуть код до замка скрині.</p><div class="lockbox" id="lk">${PADLOCK}<div class="wheels">${"<span>·</span>".repeat(4)}</div></div><div class="msg"></div><div class="acts"><button class="btn" id="ck">Відкрити замок</button></div></div><div class="board probs">`+Q.map((q,i)=>`<div class="prob"><span class="n">${i+1}</span><p>${q.t}</p><input class="dg" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Відповідь до задачі ${i+1}"></div>`).join("")+`</div></div>`;
  const all=[...el.querySelectorAll(".dg")],msg=el.querySelector(".msg"),ck=$("ck"),lk=$("lk"),wh=[...lk.querySelectorAll(".wheels span")];
  const upd=()=>all.forEach((inp,k)=>wh[k].textContent=inp.value||"·");
  all.forEach((inp,k)=>{inp.oninput=()=>{const m=inp.value.match(/[0-9]/g);inp.value=m?m.pop():"";inp.classList.remove("ok","bad");upd();if(inp.value&&all[k+1])all[k+1].focus()};inp.onfocus=()=>inp.select()});
@@ -406,7 +463,13 @@ function lockGame(el,done){
 
 /* 3. Кому який подарунок */
 const KIDS=[["Оля","f"],["Максим","m"],["Софійка","f"],["Данило","m"],["Марічка","f"],["Тарас","m"],["Ярина","f"],["Іван","m"]];
-const GIFTS=[["📚","книжка","книжку"],["⚽","м’яч","м’яч"],["🧩","пазл","пазл"],["🎨","фарби","фарби"],["🛷","санки","санки"],["⛸️","ковзани","ковзани"]];
+const GI={book:'<svg viewBox="0 0 48 48"><path d="M5 12v27c8-1.5 14-.5 19 2.5 5-3 11-4 19-2.5V12" fill="#d9473d" stroke="#8e2a22" stroke-width="2.4" stroke-linejoin="round"/><path d="M24 13c-4.5-3.2-10.5-4-17-3v26c6.5-.9 12.5 0 17 3z" fill="#fffaf0" stroke="#2c1e12" stroke-width="2.2" stroke-linejoin="round"/><path d="M24 13c4.5-3.2 10.5-4 17-3v26c-6.5-.9-12.5 0-17 3z" fill="#fffaf0" stroke="#2c1e12" stroke-width="2.2" stroke-linejoin="round"/><path d="M11 16.5h8.5M11 21.5h8.5M11 26.5h8.5M28.5 16.5H37M28.5 21.5H37M28.5 26.5H34" stroke="#9fbfdc" stroke-width="2.2" stroke-linecap="round"/></svg>',
+ball:'<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="18" fill="#fff" stroke="#2c1e12" stroke-width="2.4"/><path d="M24 16.5l7.1 5.2-2.7 8.4h-8.8l-2.7-8.4z" fill="#2c1e12"/><path d="M24 16.5V8.5M31.1 21.7l7.6-2.5M28.4 30.1l4.7 6.5M19.6 30.1l-4.7 6.5M16.9 21.7l-7.6-2.5" stroke="#2c1e12" stroke-width="2.2"/><path d="M19 7l5 1.5L29 7a18 18 0 0 0-10 0zM40.5 16l-1.8 3.2 1.4 5.3a18 18 0 0 0 .4-8.5zM7.5 16l1.8 3.2-1.4 5.3a18 18 0 0 1-.4-8.5zM12 36.5l2.9.1 4.1 3.9A18 18 0 0 1 12 36.5zM36 36.5l-2.9.1-4.1 3.9a18 18 0 0 0 7-4z" fill="#2c1e12"/></svg>',
+puzzle:'<svg viewBox="0 0 48 48"><path d="M9 15h10a5 5 0 1 1 10 0h10v9.5a5 5 0 1 0 0 9.5V43H29a5 5 0 1 0-10 0H9v-9a5 5 0 1 1 0-10z" fill="#3f9a66" stroke="#1d5434" stroke-width="2.4" stroke-linejoin="round"/><path d="M14 20.5c1.5-1.4 3.5-1.6 5-.8" fill="none" stroke="#8fd3a8" stroke-width="2.2" stroke-linecap="round"/></svg>',
+paints:'<svg viewBox="0 0 48 48"><path d="M24 6C13 6 5.5 13.8 5.5 23.4 5.5 33.4 13.3 41 22.2 41c3.1 0 4.2-2.2 3.1-4.7-1.1-2.5.5-4.8 3.1-4.8h5.3c5.8 0 9.3-3.6 9.3-8.8C43 13 34.6 6 24 6z" fill="#f4dcae" stroke="#8a5a14" stroke-width="2.4" stroke-linejoin="round"/><circle cx="14.5" cy="20" r="3.8" fill="#d9473d"/><circle cx="21.5" cy="12.8" r="3.8" fill="#e9a93b"/><circle cx="31" cy="13.5" r="3.8" fill="#3f9a66"/><circle cx="36.5" cy="21.5" r="3.6" fill="#2f6fbd"/><circle cx="14.5" cy="30" r="3.6" fill="#8e4fb3"/></svg>',
+sled:'<svg viewBox="0 0 48 48"><path d="M4 33.5h31c5 0 8-2.4 8.5-7" fill="none" stroke="#43290f" stroke-width="3.2" stroke-linecap="round"/><path d="M13 25.5v8M33 25.5v8" stroke="#6e4524" stroke-width="3.2" stroke-linecap="round"/><rect x="7" y="18.5" width="33" height="7.5" rx="2.5" fill="#d9473d" stroke="#8e2a22" stroke-width="2.2"/><path d="M15 18.5v7.5M23.5 18.5v7.5M32 18.5v7.5" stroke="#8e2a22" stroke-width="1.8"/><path d="M40 21c3 0 5-2 5-5" fill="none" stroke="#c9871d" stroke-width="2.2" stroke-linecap="round"/></svg>',
+skates:'<svg viewBox="0 0 48 48"><path d="M13 7h12.5v15.5c0 2.2 1.2 3.5 3.4 4.1l8.6 2.4c3 .9 4.5 3 4.5 5.4V36H13z" fill="#fff" stroke="#2c1e12" stroke-width="2.4" stroke-linejoin="round"/><path d="M13 31.5h29" stroke="#2c1e12" stroke-width="2.2"/><path d="M17 12h5.5M17 16.5h5.5M17 21h5.5" stroke="#d9473d" stroke-width="2.4" stroke-linecap="round"/><path d="M18 36v4.5M35 36v4.5" stroke="#7d8a99" stroke-width="2.6"/><path d="M9 41h33.5c2 0 3.5-1.2 3.5-3" fill="none" stroke="#7d8a99" stroke-width="3" stroke-linecap="round"/></svg>'};
+const GIFTS=[[GI.book,"книжка","книжку"],[GI.ball,"м’яч","м’яч"],[GI.puzzle,"пазл","пазл"],[GI.paints,"фарби","фарби"],[GI.sled,"санки","санки"],[GI.skates,"ковзани","ковзани"]];
 function perms(n){if(n===1)return[[0]];const o=[];perms(n-1).forEach(p=>{for(let i=0;i<=p.length;i++){const q=[...p];q.splice(i,0,n-1);o.push(q)}});return o}
 function genLogic(n){
  const kids=shuf(KIDS).slice(0,n),gifts=shuf(GIFTS).slice(0,n),sol=shuf([...Array(n).keys()]),all=perms(n);
@@ -421,7 +484,7 @@ function logicGame(el,done){
  let round=0;const SZ=[3,4];
  function start(){const n=SZ[round],L=genLogic(n),sel=Array(n).fill(-1);
   const v=c=>L.kids[c][1]==="f"?"отримала":"отримав";
-  el.innerHTML=`<p class="ins"><b>Рівень ${round+1} із 2.</b> Прочитай записки ельфа й обери кожній дитині її подарунок.</p><ol class="notes">`+L.clues.map(x=>`<li>${L.kids[x.c][0]} ${x.pos?"":"не "}${v(x.c)} ${L.gifts[x.g][2]}.</li>`).join("")+"</ol>"+L.kids.map((k,c)=>`<div class="kid"><b>${k[0]}</b><div class="gifts">`+L.gifts.map((g,gi)=>`<button class="gb" data-c="${c}" data-g="${gi}"><i>${g[0]}</i>${g[1]}</button>`).join("")+"</div></div>").join("")+'<div class="msg"></div><div class="acts"><button class="btn" id="ck">Перевірити</button></div>';
+  el.innerHTML=`<div class="pz"><div class="side"><p class="ins"><b>Рівень ${round+1} із 2.</b> Прочитай записки ельфа й обери кожній дитині її подарунок.</p><ol class="notes">`+L.clues.map(x=>`<li>${L.kids[x.c][0]} ${x.pos?"":"не "}${v(x.c)} ${L.gifts[x.g][2]}.</li>`).join("")+'</ol><div class="msg"></div><div class="acts"><button class="btn" id="ck">Перевірити</button></div></div><div class="board">'+L.kids.map((k,c)=>`<div class="kid"><b>${k[0]}</b><div class="gifts">`+L.gifts.map((g,gi)=>`<button class="gb" data-c="${c}" data-g="${gi}"><i>${g[0]}</i>${g[1]}</button>`).join("")+"</div></div>").join("")+'</div></div>';
   const rows=[...el.querySelectorAll(".kid")],bts=[...el.querySelectorAll(".gb")],msg=el.querySelector(".msg"),ck=$("ck");
   const paint=()=>bts.forEach(b=>b.classList.toggle("sel",sel[+b.dataset.c]===+b.dataset.g));
   bts.forEach(b=>b.onclick=()=>{const c=+b.dataset.c,g=+b.dataset.g;
@@ -463,7 +526,7 @@ function arcticQuiz(el,done){
  const N=8,NEED=6,LET="АБВГ";
  function start(){const qs=shuf(QZ).slice(0,N),res=[];let i=0,ok=0;
   function render(){const q=qs[i],o=shuf(q[1].map((t,k)=>({t,r:k===0})));let lock=false;
-   el.innerHTML=`<div class="qbar">${qs.map((_,k)=>`<i class="${res[k]||(k===i?"cur":"")}"></i>`).join("")}</div><p class="qn">Питання ${i+1} з ${N}</p><p class="qq">${q[0]}</p>`+o.map((x,k)=>`<button class="opt"><em>${LET[k]}</em><span>${x.t}</span></button>`).join("")+`<div class="msg"></div><div class="acts"><button class="btn" id="qx" hidden>${i<N-1?"Наступне питання":"Результат"}</button></div>`;
+   el.innerHTML=`<div class="pz"><div class="side"><div class="qhead"><div class="qbar">${qs.map((_,k)=>`<i class="${res[k]||(k===i?"cur":"")}"></i>`).join("")}</div><p class="qn">Питання ${i+1} з ${N}</p><p class="qq">${q[0]}</p></div><div class="msg"></div><div class="acts"><button class="btn" id="qx" hidden>${i<N-1?"Наступне питання":"Результат"}</button></div></div><div class="board">`+o.map((x,k)=>`<button class="opt"><em>${LET[k]}</em><span>${x.t}</span></button>`).join("")+`</div></div>`;
    const bs=[...el.querySelectorAll(".opt")],m=el.querySelector(".msg");
    bs.forEach((b,k)=>b.onclick=()=>{if(lock)return;lock=true;bs.forEach(x=>x.disabled=true);
     if(o[k].r){b.classList.add("ok");ok++;res[i]="ok";say(m,"Правильно! "+q[2],"ok")}
@@ -496,7 +559,7 @@ function nonogram(el,done){
  const st=sol.map(r=>r.map(()=>0));let mode=1,lock=false,hints=3;const steps=ngSteps(rc,cc,N);
  let g='<div></div>'+cc.map(c=>`<div class="nc">${c.map(x=>`<span>${x}</span>`).join("")}</div>`).join("");
  rc.forEach((c,i)=>{g+=`<div class="nr">${c.map(x=>`<span>${x}</span>`).join("")}</div>`;for(let j=0;j<N;j++)g+=`<div class="gc${i===0?" t":""}${j===0?" l":""}${i===N-1?" b":""}${j===N-1?" r":""}" data-r="${i}" data-c="${j}"></div>`});
- el.innerHTML=`<p class="ins"><b>Рівень 1 із 2.</b> Числа показують, скільки клітинок підряд треба зафарбувати в рядку чи стовпчику. Зафарбуй їх — і з’явиться малюнок. Можна вести пальцем по рядку чи стовпчику.</p><div class="tools"><div class="segc"><button class="on" id="m1"><i class="sw"></i>Зафарбувати</button><button id="m2"><i class="sx">✕</i>Порожня</button></div><button class="hintb" id="hn">${ICON.bulb}<span>Підказка (3)</span></button></div><div class="ng" style="grid-template-columns:auto repeat(${N},var(--cs))">${g}</div><div class="msg"></div><div class="acts"><button class="btn" id="ck">Перевірити</button></div>`;
+ el.innerHTML=`<div class="pz"><div class="side"><p class="ins"><b>Рівень 1 із 2.</b> Числа показують, скільки клітинок підряд треба зафарбувати в рядку чи стовпчику. Зафарбуй їх — і з’явиться малюнок. Можна вести пальцем по рядку чи стовпчику.</p><div class="tools"><div class="segc"><button class="on" id="m1"><i class="sw"></i>Зафарбувати</button><button id="m2"><i class="sx">✕</i>Порожня</button></div><button class="hintb" id="hn">${ICON.bulb}<span>Підказка (3)</span></button></div><div class="msg"></div><div class="acts"><button class="btn" id="ck">Перевірити</button></div></div><div class="board"><div class="ng" style="grid-template-columns:auto repeat(${N},var(--cs))">${g}</div></div></div>`;
  const cs=[...el.querySelectorAll(".gc")],msg=el.querySelector(".msg"),ck=$("ck");
  const paint=c=>{const v=st[+c.dataset.r][+c.dataset.c];c.classList.remove("ok","bad");c.classList.toggle("f",v===1);c.classList.toggle("m",v===2)};
  const grid=el.querySelector(".ng");let drag=null;
@@ -537,7 +600,7 @@ function sudoku(el,done){
  const N=4,g=pick(SUD).map(r=>[...r].map(c=>c==="."?0:+c)),sol=sudSolutions(g.map(r=>[...r]),1)[0],cur=g.map(r=>[...r]);
  let sel=null,lock=false,hints=3;const total=g.flat().filter(v=>!v).length;
  let cells="";for(let r=0;r<N;r++)for(let c=0;c<N;c++)cells+=`<div class="sc${g[r][c]?" g":""}${c===1?" r2":""}${r===1?" b2":""}" data-r="${r}" data-c="${c}">${g[r][c]||""}</div>`;
- el.innerHTML=`<p class="ins"><b>Рівень 2 із 2.</b> Заповни клітинки цифрами від 1 до 4 так, щоб у кожному рядку, стовпчику й блоці 2×2 цифри не повторювалися. Натисни клітинку, потім цифру.</p><div class="tools"><button class="hintb" id="shn">${ICON.bulb}<span>Підказка (3)</span></button></div><div class="sd">${cells}</div><div class="kp">`+[1,2,3,4].map(d=>`<button data-d="${d}">${d}</button>`).join("")+`<button data-d="0" aria-label="Стерти">${ICON.back}</button></div><div class="msg"></div><div class="acts"><button class="btn" id="sck">Перевірити</button></div>`;
+ el.innerHTML=`<div class="pz"><div class="side"><p class="ins"><b>Рівень 2 із 2.</b> Заповни клітинки цифрами від 1 до 4 так, щоб у кожному рядку, стовпчику й блоці 2×2 цифри не повторювалися. Натисни клітинку, потім цифру.</p><div class="tools"><button class="hintb" id="shn">${ICON.bulb}<span>Підказка (3)</span></button></div><div class="msg"></div><div class="acts"><button class="btn" id="sck">Перевірити</button></div></div><div class="board"><div class="sd">${cells}</div><div class="kp">`+[1,2,3,4].map(d=>`<button data-d="${d}">${d}</button>`).join("")+`<button data-d="0" aria-label="Стерти">${ICON.back}</button></div></div></div>`;
  const cs=[...el.querySelectorAll(".sc")],msg=el.querySelector(".msg"),ck=$("sck"),at=(r,c)=>cs[r*N+c];
  const paint=(r,c)=>{const x=at(r,c);x.textContent=cur[r][c]||"";x.classList.remove("ok","bad")};
  cs.forEach(x=>x.onclick=()=>{if(lock||x.classList.contains("g"))return;cs.forEach(y=>y.classList.remove("sel"));x.classList.add("sel");sel=[+x.dataset.r,+x.dataset.c]});
@@ -574,7 +637,7 @@ function genCipher(){
  return{WORD,U,code,Q:[...WORD].map(ch=>({ch,N:code[ch],e:expr(code[ch])}))}}
 function cipher(el,done){
  const {WORD,U,code,Q}=genCipher(),n=Q.length;
- el.innerHTML=`<p class="ins">Розв’яжи приклади. Знайди кожну відповідь у ключі — і літери складуть слово.</p><div class="key">`+shuf(U).map(c=>`<span>${code[c]} = <b>${c}</b></span>`).join("")+`</div><div class="ex">`+Q.map((q,i)=>`<label><span><small>${i+1}.</small>${q.e} =</span><input class="dg" inputmode="numeric" maxlength="4" autocomplete="off"></label>`).join("")+`</div><div class="word" id="wd"></div><div class="msg"></div><div class="acts"><button class="btn" id="ck">Перевірити</button></div>`;
+ el.innerHTML=`<div class="pz"><div class="side"><p class="ins">Розв’яжи приклади. Знайди кожну відповідь у ключі — і літери складуть слово.</p><div class="key">`+shuf(U).map(c=>`<span>${code[c]} = <b>${c}</b></span>`).join("")+`</div><div class="word" id="wd"></div><div class="msg"></div><div class="acts"><button class="btn" id="ck">Перевірити</button></div></div><div class="board ex">`+Q.map((q,i)=>`<label><span><small>${i+1}.</small>${q.e} =</span><input class="dg" inputmode="numeric" maxlength="4" autocomplete="off"></label>`).join("")+`</div></div>`;
  const all=[...el.querySelectorAll(".dg")],msg=el.querySelector(".msg"),ck=$("ck"),wd=$("wd"),got=Array(n).fill(false);
  const word=()=>wd.innerHTML=Q.map((q,i)=>`<span class="${got[i]?"on":""}">${got[i]?q.ch:"?"}</span>`).join("");word();
  all.forEach((inp,i)=>{inp.oninput=()=>{inp.value=inp.value.replace(/\D/g,"");inp.classList.remove("ok","bad");if(got[i]){got[i]=false;word()}};inp.onfocus=()=>inp.select()});
@@ -591,16 +654,16 @@ function task(i,rep){const p=P[i];
  const play=()=>{show(`<div class="th"><img src="${CH[i][0]}" alt=""><div><b>${p.who}</b><span>${p.task}${rep?'<em class="chip">Тренування</em>':""}</span></div></div><div class="game" id="gm"></div>`,{x:true,cls:"wide"});
   GAMES[i]($("gm"),()=>rep?hide():thanks(i))};
  if(rep){play();return}
- show(stage([[CH[i][0],"st-ch"],[IMG.idle,"st-mk"]])+`<div class="who"><h2>${p.who}</h2><span>${ICON.pin}${p.n}</span></div>`+talk(DLG[i],i)+`<div class="acts"><button class="btn" id="hp">${p.btn}</button></div>`,{x:true});
+ show(stage([[CH[i][0],"st-ch"],[IMG.idle,"st-mk"]])+`<div class="who"><h2>${p.who}</h2><span>${ICON.pin}${p.n}</span></div>`+talk(DLG[i],i)+`<div class="acts"><button class="btn" id="hp">${p.btn}</button></div>`,{x:true,cls:"dlg"});
  $("hp").onclick=play}
 function thanks(i){S.done=i+1;save();look(i);
- show(stage([[CH[i][1],"st-ch hop"],[IMG.happy,"st-mk hop2"]],{cls:"glow"})+`<div class="who"><h2>${P[i].who}</h2></div>`+talk([["c",THX[i]],["m",MR[i]]],i)+`<div class="reward"><div class="bigtag">${P[i].L}</div><p>Мурко отримує частину мішка й літеру <b>${P[i].L}</b>.<br>Зібрано ${i+1} з ${P.length}.</p></div><div class="acts"><button class="btn gold" id="nx">Забрати нагороду</button></div>`);
+ show(stage([[CH[i][1],"st-ch hop"],[IMG.happy,"st-mk hop2"]],{cls:"glow"})+`<div class="who"><h2>${P[i].who}</h2></div>`+talk([["c",THX[i]],["m",MR[i]]],i)+`<div class="reward"><div class="bigtag">${P[i].L}</div><p>Мурко отримує частину мішка й літеру <b>${P[i].L}</b>.<br>Зібрано ${i+1} з ${P.length}.</p></div><div class="acts"><button class="btn gold" id="nx">Забрати нагороду</button></div>`,{cls:"dlg"});
  $("nx").onclick=()=>{hide();i<P.length-1?walk(i,()=>task(i+1)):finale()}}
 function finale(){
- show(stage([[IMG.happy,"solo hop"]],{gifts:true,cls:"glow"})+`<h2 class="title">Мішок знову цілий!</h2><p class="lead">Усі шість літер склали чарівне слово:</p><div class="wordrow">${P.map((p,k)=>`<span style="animation-delay:${k*.15}s">${p.L}</span>`).join("")}</div><p class="lead">Подарунки повертаються до дітей. Час прикрасити ялинку!</p><div class="acts"><a class="btn gold" href="https://lvnotes.github.io/christmas_tree/" target="_blank" rel="noopener">До ялинки</a><button class="btn ghost" id="rp">Пройти квест заново</button></div><p class="small">Щоб потренуватися, закрий це вікно й натисни на будь-яку пройдену мітку на карті.</p>`,{x:true});
+ show(stage([[IMG.happy,"solo hop"]],{gifts:true,cls:"glow"})+`<h2 class="title">Мішок знову цілий!</h2><p class="lead">Усі шість літер склали чарівне слово:</p><div class="wordrow">${P.map((p,k)=>`<span style="animation-delay:${k*.15}s">${p.L}</span>`).join("")}</div><p class="lead">Подарунки повертаються до дітей. Час прикрасити ялинку!</p><div class="acts"><a class="btn gold" href="https://lvnotes.github.io/christmas_tree/" target="_blank" rel="noopener">До ялинки</a><button class="btn ghost" id="rp">Пройти квест заново</button></div><p class="small">Щоб потренуватися, закрий це вікно й натисни на будь-яку пройдену мітку на карті.</p>`,{x:true,cls:"dlg"});
  $("rp").onclick=()=>{S={done:0,seen:false};save();location.reload()}}
 function intro(){
- show(stage([[IMG.wow,"solo"]],{gifts:true})+`<h2 class="title">Біда напередодні свята!</h2><p class="lead">Чарівний мішок із подарунками зачепився за комету й порвався. Подарунки розлетілися по всьому світу!</p><ol class="steps"><li>Натисни на золоту мітку на карті — там на Мурка чекає друг.</li><li>Виконай його завдання, і друг віддасть частину мішка та літеру.</li><li>Збери всі шість літер — і мішок знову стане цілим.</li></ol><div class="acts"><button class="btn gold" id="st">Вирушаємо!</button></div>`);
+ show(stage([[IMG.wow,"solo"]],{gifts:true})+`<h2 class="title">Біда напередодні свята!</h2><p class="lead">Чарівний мішок із подарунками зачепився за комету й порвався. Подарунки розлетілися по всьому світу!</p><ol class="steps"><li>Натисни на золоту мітку на карті — там на Мурка чекає друг.</li><li>Виконай його завдання, і друг віддасть частину мішка та літеру.</li><li>Збери всі шість літер — і мішок знову стане цілим.</li></ol><div class="acts"><button class="btn gold" id="st">Вирушаємо!</button></div>`,{cls:"dlg"});
  $("st").onclick=()=>{S.seen=true;save();hide()}}
 function tap(i){if(busy||ov.classList.contains("show"))return;if(i<S.done)task(i,true);else if(i===S.done&&S.done<P.length)task(i)}
 $("rs").onclick=()=>{if(confirm("Почати подорож спочатку?")){S={done:0,seen:false};save();location.reload()}};
